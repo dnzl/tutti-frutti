@@ -1,78 +1,40 @@
 import React, { Component } from 'react';
-import NavBar from './components/navbar';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+
+import Index from './components/index';
 import Game from './components/game';
 import "bootstrap/dist/css/bootstrap.css";
 import './App.css';
 
 class App extends Component {
   state={
-    letters:['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'],
-    categories:[
-      {id:1,name:'Nombres'},
-      {id:2,name:'Lugares'},
-      {id:3,name:'Verbos'},
+    modes:[
+      {id:1,name:'Solo Normal',url:'solo-normal'},
+      {id:2,name:'Solo Nonstop ABC',url:'solo-nonstop-abc'},
+      {id:3,name:'Solo Nonstop Random',url:'solo-nonstop-random'},
+      {id:4,name:'Multiplayer Normal',url:'multi-normal'},
+      {id:5,name:'Multiplayer Nonstop ABC',url:'multi-nonstop-abc'},
+      {id:6,name:'Multiplayer Nonstop Random',url:'multi-nonstop-random'},
     ],
-    history:[
-      {id:1,letter:'B',time:{seconds:20,text:'00:00'},fields:[{category:{id:1,name:'Nombres'},value:'Aasdasd'}]}
-    ],
-    selectedLetter:'A',
+    selectedMode:{id:1,name:'Solo Normal',url:'solo-normal'}
   };
 
-  isLetterRepeated=(letter)=>{
-    if(!this.state.history.length) return false;
-    return this.state.history.find(x=>x.letter===letter)!==undefined;
+  onSelectMode=mode=>{
+    this.setState({selectedMode:mode});
   };
-
-  getRandomLetter=()=>{
-    return this.state.letters[Math.floor(Math.random()*this.state.letters.length)];
-  };
-
-  addLetterToHistory=(letter,values,time)=>{
-    const history=[...this.state.history];
-    history[history.length]={letter:letter,fields:values,time:time};
-    this.setState({history});
-  };
-
-  endRow=(letter,values,time)=>{
-    this.addLetterToHistory(letter,values,time);
-    this.setNewLetter();
-  };
-
-  setNewLetter=()=>{
-    let letter=this.getRandomLetter();
-    if(this.state.history.length && this.state.history.length===this.state.letters.length){
-console.log('ya se usaron todas las letras');
-      return false;
-    }
-    while(this.isLetterRepeated(letter)){letter=this.getRandomLetter()}
-
-    this.setLetter(letter);
-  };
-
-  setLetter=(letter)=>{
-    this.setState({selectedLetter:letter});
-  };
-
-  startGame=()=>{
-    this.setNewLetter();
-
-console.log('start game!');
-  };
-
 
   render() {
     return (
-      <div className="App">
-        <NavBar selectedLetter={this.state.selectedLetter}
-                startGame={this.startGame} />
-          <main className="main">
-            <Game
-              selectedLetter={this.state.selectedLetter}
-              categories={this.state.categories}
-              history={this.state.history}
-              saveRow={this.endRow} />
-          </main>
-      </div>
+      <Router>
+        <div className="App">
+          <Route path="/" exact render={()=>(
+            <Index selectedMode={this.state.selectedMode} gameModes={this.state.modes} onSelectMode={this.onSelectMode} />
+          )} />
+          <Route path="/game/:mode" render={({match})=>(
+            <Game selectedMode={match.params.mode} />
+          )} />
+        </div>
+      </Router>
     );
   }
 }

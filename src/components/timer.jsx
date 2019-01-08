@@ -38,8 +38,14 @@ export default class Timer extends Component{
   };
 
   componentDidMount=()=>{
-console.log('did mount');
     this.start();
+  };
+  componentDidUpdate=()=>{
+    if(this.props.disabled===true){
+      this.stop();
+    }else{
+      this.start();
+    }
   };
 
   componentWillUnmount=()=>{
@@ -48,7 +54,7 @@ console.log('did mount');
 
   render(){
     return (
-      <span className="col-1">
+      <span>
         [{this.props.time.text}]
       </span>
     );

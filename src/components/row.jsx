@@ -39,6 +39,7 @@ class Row extends Component{
     fields[index].clsNme=(value.length && value[0].toLowerCase()!==this.props.selectedLetter.toLowerCase())?'is-invalid':'';
     this.setState({fields});
   };
+
   componentDidMount=()=>{
     this.focus();
   }
@@ -51,27 +52,32 @@ class Row extends Component{
     const {categories,selectedLetter,saveRow} = this.props;
 
     return (
-        <React.Fragment>
-          <div className="col-1">{selectedLetter}</div>
+        <tr className={"form-group"+(selectedLetter===false?' d-none':'')}>
+          <th scope="row">{selectedLetter}</th>
           {
             categories.map((category,index)=>(
-              <div key={"input"+category.id} className="form-group col-sm">
-                <input className={"form-control mr-sm-2 "+this.state.fields[index].clsNme} type="text" placeholder=""
-                      value={this.state.fields[index].value}
-                      onChange={(e)=>{this.handleOnChange(index,e.target.value)}}
-                      ref={this.state.fields[index].ref}
-                 />
-              </div>
+              <td key={"input"+category.id}>
+                <div className="form-group">
+                  <input className={"form-control mr-sm-2 "+this.state.fields[index].clsNme}
+                        type="text"
+                        value={this.state.fields[index].value}
+                        onChange={(e)=>{this.handleOnChange(index,e.target.value)}}
+                        ref={this.state.fields[index].ref}
+                   />
+                 </div>
+              </td>
             ))
           }
-          <div className="col-sm">
-            <Timer time={this.state.time} onUpdateTime={this.handleUpdateTime}  />
+          <td>
             <button onClick={()=>{
               saveRow(selectedLetter,this.state.fields,this.state.time);
               this.rowFinished();
-            }} className="btn btn-danger btn-sm">Stop!</button>
-          </div>
-        </React.Fragment>
+            }} className={"btn btn-danger btn-sm"+(selectedLetter===false?' d-none':'')}>Stop!</button>
+          </td>
+          <td>
+            <Timer time={this.state.time} onUpdateTime={this.handleUpdateTime} disabled={selectedLetter===false}  />
+          </td>
+        </tr>
     );
   }
 }

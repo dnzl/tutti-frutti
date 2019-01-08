@@ -2,17 +2,20 @@ import React from 'react';
 
 const HistoryRow = ({h})=>{
   return (
-    <div className="row">
-      <div className="col-1">{h.letter}</div>
+    <tr>
+      <th scope="row">{h.letter}</th>
       {
         h.fields.map(field=>(
-          <div key={"h"+field.category.id} className="col-sm">
-            {field.value}
-          </div>
+          <td key={"h"+field.category.id}>
+            {field.value} <span className="badge badge-success">{field.points}</span>
+          </td>
         ))
       }
-      <div className="col-sm">[{h.time.text}]</div>
-    </div>
+      <td><span>{h.points}</span></td>
+      <td>
+        <span>[{h.time.text}]</span>
+      </td>
+    </tr>
   );
 }
 
