@@ -1,26 +1,62 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
-import Index from './components/index';
+import Start from './components/start';
 import Game from './components/game';
 import "bootstrap/dist/css/bootstrap.css";
 import './App.css';
 
-class App extends Component {
+
+let getRandomString=(length)=>{
+  return Math.random().toString(36).slice(2).substr(0,length);
+};
+
+const gameModes=[
+  {id:1,name:'Solo Normal',url:'solo-normal'},
+  {id:2,name:'Solo Nonstop ABC',url:'solo-nonstop-abc'},
+  {id:3,name:'Solo Nonstop Random',url:'solo-nonstop-random'},
+  {id:4,name:'Multiplayer Normal',url:'multi-normal'},
+  {id:5,name:'Multiplayer Nonstop ABC',url:'multi-nonstop-abc'},
+  {id:6,name:'Multiplayer Nonstop Random',url:'multi-nonstop-random'},
+];
+
+class App extends Component{
   state={
-    modes:[
-      {id:1,name:'Solo Normal',url:'solo-normal'},
-      {id:2,name:'Solo Nonstop ABC',url:'solo-nonstop-abc'},
-      {id:3,name:'Solo Nonstop Random',url:'solo-nonstop-random'},
-      {id:4,name:'Multiplayer Normal',url:'multi-normal'},
-      {id:5,name:'Multiplayer Nonstop ABC',url:'multi-nonstop-abc'},
-      {id:6,name:'Multiplayer Nonstop Random',url:'multi-nonstop-random'},
-    ],
-    selectedMode:{id:1,name:'Solo Normal',url:'solo-normal'}
+    idGame:false,
+    modes:gameModes,
+    username:'Guest',
+    selectedMode:gameModes[0],
+    startUrl:'/game/'+gameModes[0].url,
+    guests:[
+      {id:1,username:'Guest1'},
+      {id:2,username:'Guest2'},
+      {id:3,username:'Guest3'},
+    ]
+  };
+
+  constructor(){
+    super();
+    this.state.username='Guest-'+getRandomString(5);
+    this.state.idGame=getRandomString(10);
+  }
+
+  removeGuest=idGuest=>{
+    let guests=[...this.state.guests];
+    const index=guests.findIndex(x=>x.id===idGuest);
+    if(index===-1){return false;}
+    guests.splice(index,1);
+    this.setState({guests});
   };
 
   onSelectMode=mode=>{
-    this.setState({selectedMode:mode});
+    this.setState({
+      selectedMode:mode,
+      startUrl:'/game/'+(mode.url.includes('multi')?this.state.idGame:mode.url),
+    });
+  };
+
+  handleChangeName=e=>{
+    this.setState({username:e.target.value});
   };
 
   render() {
@@ -28,10 +64,21 @@ class App extends Component {
       <Router>
         <div className="App">
           <Route path="/" exact render={()=>(
-            <Index selectedMode={this.state.selectedMode} gameModes={this.state.modes} onSelectMode={this.onSelectMode} />
+            <Start selectedMode={this.state.selectedMode}
+                    gameModes={this.state.modes}
+                    onSelectMode={this.onSelectMode}
+                    username={this.state.username}
+                    onChangeName={this.handleChangeName}
+                    startUrl={this.state.startUrl}
+                    guests={this.state.guests}
+                    removeGuest={this.removeGuest}
+            />
           )} />
-          <Route path="/game/:mode" render={({match})=>(
-            <Game selectedMode={match.params.mode} />
+          <Route path="/game/:idGame" render={({match})=>(
+            <Game idGame={match.params.idGame}
+                  selectedMode={this.state.selectedMode}
+                  username={this.state.username}
+             />
           )} />
         </div>
       </Router>

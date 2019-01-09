@@ -18,5 +18,7 @@
   color: #61dafb;
 }
 
+.game .row{text-align:left;}
+
 .btn-game-mode{margin:1em 0;}
 .btn-game-mode .active{border:#fff solid 2px !important;}

@@ -20,7 +20,7 @@ class Row extends Component{
       category:cat,
       value:'',
       ref:React.createRef(),
-      clsNme:'',
+      error:false,
     }});
   };
 
@@ -36,7 +36,7 @@ class Row extends Component{
   handleOnChange=(index,value)=>{
     const fields=[...this.state.fields];
     fields[index].value=value;
-    fields[index].clsNme=(value.length && value[0].toLowerCase()!==this.props.selectedLetter.toLowerCase())?'is-invalid':'';
+    fields[index].error=(value.length && value[0].toLowerCase()!==this.props.selectedLetter.toLowerCase());
     this.setState({fields});
   };
 
@@ -58,7 +58,7 @@ class Row extends Component{
             categories.map((category,index)=>(
               <td key={"input"+category.id}>
                 <div className="form-group">
-                  <input className={"form-control mr-sm-2 "+this.state.fields[index].clsNme}
+                  <input className={"form-control mr-sm-2 "+(this.state.fields[index].error?'is-invalid':'')}
                         type="text"
                         value={this.state.fields[index].value}
                         onChange={(e)=>{this.handleOnChange(index,e.target.value)}}
