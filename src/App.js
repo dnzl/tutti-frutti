@@ -25,9 +25,9 @@ class App extends Component{
     idGame:false,
     modes:gameModes,
     username:'Guest',
-    selectedMode:gameModes[0],
+    selectedMode:gameModes[4],
     startUrl:'/game/'+gameModes[0].url,
-    guests:[
+    players:[
       {id:1,username:'Guest1'},
       {id:2,username:'Guest2'},
       {id:3,username:'Guest3'},
@@ -40,12 +40,12 @@ class App extends Component{
     this.state.idGame=getRandomString(10);
   }
 
-  removeGuest=idGuest=>{
-    let guests=[...this.state.guests];
-    const index=guests.findIndex(x=>x.id===idGuest);
+  removePlayer=idPlayer=>{
+    let players=[...this.state.players];
+    const index=players.findIndex(x=>x.id===idPlayer);
     if(index===-1){return false;}
-    guests.splice(index,1);
-    this.setState({guests});
+    players.splice(index,1);
+    this.setState({players});
   };
 
   onSelectMode=mode=>{
@@ -70,14 +70,15 @@ class App extends Component{
                     username={this.state.username}
                     onChangeName={this.handleChangeName}
                     startUrl={this.state.startUrl}
-                    guests={this.state.guests}
-                    removeGuest={this.removeGuest}
+                    players={this.state.players}
+                    removePlayer={this.removePlayer}
             />
           )} />
           <Route path="/game/:idGame" render={({match})=>(
             <Game idGame={match.params.idGame}
                   selectedMode={this.state.selectedMode}
                   username={this.state.username}
+                  players={this.state.players}
              />
           )} />
         </div>

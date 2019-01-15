@@ -43,6 +43,9 @@ class Row extends Component{
   componentDidMount=()=>{
     this.focus();
   }
+  componentDidUpdate=(op)=>{
+    if(!op.selectedLetter){this.focus();}
+  }
 
   focus(){
     this.state.fields[0].ref.current.focus();
@@ -63,6 +66,7 @@ class Row extends Component{
                         value={this.state.fields[index].value}
                         onChange={(e)=>{this.handleOnChange(index,e.target.value)}}
                         ref={this.state.fields[index].ref}
+                        autoFocus={index===0}
                    />
                  </div>
               </td>

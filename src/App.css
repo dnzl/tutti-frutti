@@ -22,3 +22,5 @@
 
 .btn-game-mode{margin:1em 0;}
 .btn-game-mode .active{border:#fff solid 2px !important;}
+.col-players ul{list-style:none;}
+.col-players li{ margin:1em;}

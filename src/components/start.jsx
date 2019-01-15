@@ -8,8 +8,8 @@ const Start=({
   username,
   onChangeName,
   startUrl,
-  guests,
-  removeGuest
+  players,
+  removePlayer
 })=>{
   const inviteUrl=window.location.protocol+'//'+window.location.host+startUrl;
   return (
@@ -54,12 +54,12 @@ const Start=({
                       <label className="col-sm-2 col-form-label">Players:</label>
                       <div className="col-sm-10">
                         {
-                          guests.map((guest)=>(
-                            <span key={"guest-"+guest.id} className="badge badge-pill badge-secondary mr-5">
-                              {guest.username}
+                          players.map((player)=>(
+                            <span key={"player-"+player.id} className="badge badge-pill badge-secondary mr-5">
+                              {player.username}
                               <span className="ml-2"
                                     style={{cursor:"pointer"}}
-                                    onClick={()=>{removeGuest(guest.id);}}>
+                                    onClick={()=>{removePlayer(player.id);}}>
                                     &times;
                               </span>
                             </span>

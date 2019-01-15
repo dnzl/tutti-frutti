@@ -1,17 +1,28 @@
 import React, { Component } from 'react';
 import NavBar from './navbar';
-import Board from './board';
+import SoloGame from './solo-game';
+import MultiGame from './multi-game';
 
 class Game extends Component {
   state={
     letters:['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'],
     categories:[
-      {id:1,name:'Nombres'},
-      {id:2,name:'Lugares'},
-      {id:3,name:'Verbos'},
+      {id:1,name:'Names'},
+      {id:2,name:'Places'},
+      {id:3,name:'Verbs'},
+      {id:4,name:'Celebrities'},
     ],
     history:[],
     selectedLetter:false,
+    totalPoints:0,
+    playersScores:[
+      {
+        player:{id:1,username:'dnzl'},
+        history:[
+          {letter:'A',}
+        ],
+      }
+    ]
   };
 
   isLetterRepeated=(letter)=>{
@@ -33,7 +44,7 @@ class Game extends Component {
     return new Promise(resolve=>{
       const history=[...this.state.history];
       history[history.length]=data;
-      this.setState({history},()=>{resolve(true);});
+      this.setState({history,totalPoints:this.state.totalPoints+data.points},()=>{resolve(true);});
     });
   };
 
@@ -100,14 +111,27 @@ class Game extends Component {
     return (
       <div className="Game">
         <NavBar selectedLetter={this.state.selectedLetter}
-                startGame={this.startGame} />
-          <main className="main">
-            <Board
-              selectedLetter={this.state.selectedLetter}
-              categories={this.state.categories}
-              history={this.state.history}
-              saveRow={this.saveRow} />
-          </main>
+                startGame={this.startGame}
+                points={this.state.totalPoints} />
+          <div className="container">
+            {this.props.selectedMode.url.includes('multi')?(
+              <MultiGame
+                selectedLetter={this.state.selectedLetter}
+                categories={this.state.categories}
+                history={this.state.history}
+                saveRow={this.saveRow}
+                players={this.props.players}
+                playersScores={this.state.playersScores}
+              />
+            ):(
+              <SoloGame
+                selectedLetter={this.state.selectedLetter}
+                categories={this.state.categories}
+                history={this.state.history}
+                saveRow={this.saveRow}
+              />
+            )}
+          </div>
       </div>
     );
   }
